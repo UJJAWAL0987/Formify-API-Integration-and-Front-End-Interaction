@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Form with API Integration</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+
+    <style>
+        /* Inline styles can be minimized to focus on custom advanced CSS */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9fafc;
+        }
+
+        .form-section,
+        .api-section,
+        .footer {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-section h1,
+        .api-section h2,
+        .footer h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">My CRUD App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#formSection">Form</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#submissionsSection">Submissions</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Container -->
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+    
+                <!-- Form Section -->
+                <div id="formSection" class="form-section">
+                    <h1>Submit Your Information</h1>
+                    <form id="mainForm" onsubmit="return handleSubmit(event);">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name:</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" id="password" name="password" class="form-control" required>
+                            <div id="passwordError" class="error"></div>
+                            <small id="passwordStrength" class="form-text"></small>
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Age:</label>
+                            <input type="number" id="age" name="age" class="form-control" required>
+                        </div>
+    
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+    
+                <!-- Submissions Section -->
+                <div id="submissionsSection" class="submissions-section mt-5">
+                    <h2>Submitted Information</h2>
+                    <ul id="submissionsList" class="list-group"></ul>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer bg-dark text-light mt-5">
+        <div class="container">
+            <h2>About Us</h2>
+            <p class="text-center">This is a simple app demonstrating API interaction with form submissions and
+                responsive design using Bootstrap.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="/js/script.js"></script>
+
+
+    <script>
+        // Fetch and display submissions from the API
+        async function fetchSubmissions() {
+            const response = await fetch('/api/submissions');
+            const submissions = await response.json();
+            const submissionsList = document.getElementById('submissionsList');
+            submissionsList.innerHTML = '';
+
+            submissions.forEach(sub => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.textContent = `${sub.name} - ${sub.email} (Age: ${sub.age})`;
+                submissionsList.appendChild(li);
+            });
+        }
+
+        // Handle form submission
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const age = document.getElementById('age').value;
+
+            const data = { name, email,password, age };
+
+            try {
+                const response = await fetch('/api/submissions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                // Check if response is ok
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+
+                const result = await response.json();
+                if (result.message) {
+                    alert(result.message); // Show the message from the server
+                } else {
+                    alert('Unexpected response from server');
+                }
+
+
+                // Clear form and fetch updated submissions
+                document.getElementById('mainForm').reset();
+                fetchSubmissions();
+            } catch (error) {
+                console.error('Error submitting data:', error);
+                alert('An error occurred while submitting the form');
+            }
+        }
+
+        // Fetch existing submissions on page load
+        window.onload = fetchSubmissions;
+    </script>
+</body>
+
+</html>

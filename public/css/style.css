@@ -1,0 +1,57 @@
+/* Custom Advanced CSS */
+
+/* Add hover transition for buttons */
+.submit-btn {
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+/* Custom animations for form section */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-section {
+    animation: slideIn 0.8s ease-out;
+}
+
+.api-section {
+    animation: slideIn 0.8s ease-out 0.2s;
+}
+
+.footer {
+    animation: slideIn 0.8s ease-out 0.4s;
+}
+
+/* Form Error Styles */
+.error {
+    color: red;
+    font-size: 12px;
+}
+
+/* Smooth transitions for section visibility */
+section {
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+section[style*="display: none"] {
+    opacity: 0;
+    visibility: hidden;
+}
+
+section[style*="display: block"] {
+    opacity: 1;
+    visibility: visible;
+}
