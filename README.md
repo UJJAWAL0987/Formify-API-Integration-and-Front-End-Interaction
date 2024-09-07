@@ -14,18 +14,7 @@ This project is a web application demonstrating full-stack development concepts,
 
 ## Project Structure
 
-Formify/ 
-├── server.js # Node.js server file with Express configuration 
-├── package.json # Project metadata and dependencies 
-├── views/ # EJS template files 
-  └── form.ejs # Main form view 
-├── public/ # Public assets served by Express 
-  ├── css/ 
-    └── style.css # Custom CSS for advanced styling 
-  ├── js/ 
-    └── script.js # JavaScript for front-end interactions and API communication 
-└── index.html # Main HTML file (if needed) 
-└── README.md # This README file
+Formify/ │ ├── server.js # Node.js server file with Express configuration ├── package.json # Project metadata and dependencies │ ├── views/ # EJS template files │ └── form.ejs # Main form view │ ├── public/ # Public assets served by Express │ ├── css/ │ │ └── style.css # Custom CSS for advanced styling │ ├── js/ │ │ └── script.js # JavaScript for front-end interactions and API communication │ └── index.html # Main HTML file (if needed) │ └── README.md # This README file
 
 
 ## Getting Started
